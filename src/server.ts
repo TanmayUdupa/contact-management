@@ -45,7 +45,6 @@ app.post('/contacts', async (req: Request, res: Response) => {
 // Update a contact by ID
 app.put('/contacts/:id', async (req: Request, res: Response) : Promise<any> => {
     try {
-        console.log("AAAAA");
         const updatedContact = await Contact.findByIdAndUpdate(req.params.id, req.body, { new: true });
         
         if (!updatedContact) {
@@ -62,7 +61,6 @@ app.put('/contacts/:id', async (req: Request, res: Response) : Promise<any> => {
 // Delete a contact by ID
 app.delete('/contacts/:id', async (req: Request, res: Response) : Promise<any> => {
     try {
-        console.log("aaaaa");
         const deletedContact = await Contact.findByIdAndDelete(req.params.id);
         
         if (!deletedContact) {
