@@ -1,46 +1,111 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Contact Management System
 
-## Available Scripts
+## Steps to Run the Project
 
-In the project directory, you can run:
+1. Clone the Repository:
+   ```bash
+   git clone https://github.com/TanmayUdupa/contact-management
+   cd contact-management
+   ```
 
-### `npm start`
+2. Run the following command to install the required Node.js modules:
+   ```bash
+   npm install
+   ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+3. Create a `.env` file in the root directory with the following content:
+   ```env
+   MONGO_URI=your-mongodb-uri-here
+   ```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+4. Run the server:
+   ```bash
+   npm start
+   ```
+5. Navigate to the Client Directory:
+   ```bash
+   cd client
+   ```
 
-### `npm test`
+6. Run the following command to install the required Node.js modules:
+   ```bash
+   npm install
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+7. Run the following command to start the React development server:
+   ```bash
+   npm start
+   ```
 
-### `npm run build`
+8. Open your browser and navigate to:
+   ```
+   http://localhost:3000
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Database Schema
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```typescript
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
-### `npm run eject`
+const contactSchema = new Schema({
+  firstName: {
+    type: String,
+    required: true
+  },
+  lastName: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: {
+      validator: function (value: string) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      },
+      message: 'Invalid email address format',
+    },
+  },
+  phoneNo: {
+    type: String,
+    required: true,
+    unique: true,
+    minLength: [10, "no should have minimum 10 digits"],
+    maxLength: [10, "no should have maximum 10 digits"],
+    match: [/\d{10}/, "no should only have digits"]
+  },
+  company: String,
+  jobTitle: String
+});
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+const Contact = model('Contact', contactSchema);
+export default Contact;
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Chosen Database: MongoDB
+I selected MongoDB because I wanted to implement a MERN Stack application. It also provides good tools for CRUD operations.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+The reason why it fits this project is that this project requires a and scalable database for storing and retrieving contact information efficiently. MongoDB’s document-oriented structure aligns well with this requirement. Contact management is an evolving data structure hence MongoDB's schema less nature is useful.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Challenges
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Handling MongoDB Validation Errors
+   - **Challenge**: While setting up the database and backend, it was difficult for me to find out the errors thrown by mongoose.
+   - **How I resolved**: Used `try-catch` blocks for detecting and handling the errors.
+
+2. Setting up MongoDB Atlas and connecting to the MongoDB Database
+   - **Challenge**: I had used MongoDB in my system but I wanted to try using MongoDB Atlas which I had no prior experience working with. It was initially difficult to connect to the database.
+   - **Solution**: I signed up for MongoDB Atlas, created a cluster, and set up a database user. Then, I added the connection string in my .env file. I then realized I had to add the name of the database as well in the link. After which I was able to successfully connect.
+
+3. Pagination and Sorting
+    -  **Challenge**: I did not know how to implement pagination and sorting.
+    -  **Solution**: Looked into Material-UI's docs and GFG from which I learnt how to use TableSortLabel and TablePagination.
